@@ -85,6 +85,104 @@
                     }
                 ]
             }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "DeploymentConfig",
+            "metadata": {
+                "name": "${APPLICATION}"
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "deploymentConfig": "${APPLICATION}"
+                },
+                "strategy": {
+                    "resources": {},
+                    "rollingParams": {
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "updatePeriodSeconds": 1
+                    },
+                    "type": "Rolling"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "deploymentConfig": "${APPLICATION}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "${APPLICATION}",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "initialDelaySeconds": 30,
+                                    "tcpSocket": {
+                                        "port": 8080
+                                    },
+                                    "timeoutSeconds": 1
+                                },
+                                "name": "${APPLICATION}",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": [],
+                                "securityContext": {
+                                    "capabilities": {},
+                                    "privileged": false
+                                },
+                                "terminationMessagePath": "/dev/termination-log"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always"
+                    }
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "${APPLICATION}"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "${APPLICATION}:latest"
+                            }
+                        },
+                        "type": "ImageChange"
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "name": "${APPLICATION}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "${APPLICATION}-http",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "${APPLICATION}"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            }
         }
     ],
     "parameters": [
