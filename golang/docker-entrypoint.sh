@@ -29,8 +29,10 @@ if [[ ! -f ${GO_ARCHIVE} ]]; then
 	exit 1
 fi
 
-cd /usr/local \
-	&& tar xfz ${GO_ARCHIVE}
+pushd /usr/local \
+	&& tar xfz ${GO_ARCHIVE} \
+	&& popd
+	&& go version
 
 #
 if [[ "$1" = 'build' ]]; then
@@ -84,14 +86,6 @@ if [[ "$1" = 'build' ]]; then
 	if [ -n "${OUTPUT_IMAGE}" ] || [ -s "/root/.dockercfg" ]; then
 	  docker push "${TAG}"
 	fi
-
-	echo "running a build here, boss"
-	go version
-
-	echo ls /
-	ls -l /
-
-	find . -name \*.go -print
 
 	exit 0
 fi

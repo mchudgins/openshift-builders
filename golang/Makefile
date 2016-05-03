@@ -3,7 +3,7 @@ IMAGE := golang-builder:latest
 all: build
 
 build: Dockerfile docker-entrypoint.sh
-	sudo docker build -t $(IMAGE) .
+	sudo docker build --rm -t $(IMAGE) .
 
 push:
 	sudo docker tag -f $(IMAGE) internal-registry.dstresearch.com/$(IMAGE)
@@ -11,5 +11,3 @@ push:
 
 clean:
 	- sudo docker rmi $(IMAGE)
-
-
