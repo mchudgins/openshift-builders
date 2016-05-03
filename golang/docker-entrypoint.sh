@@ -21,6 +21,7 @@ function goCompile {
 	ls -l
 	if [[ -f Makefile ]]; then
 		make all
+		return
 	fi
 
 	if [[ -d Godeps ]]; then

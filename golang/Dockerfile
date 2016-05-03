@@ -12,6 +12,7 @@ RUN apt-get update \
 	  ca-certificates \
 		curl \
 		git \
+		make \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
 	&& curl -sL https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz -o /go-1.6.2.tar.gz \
