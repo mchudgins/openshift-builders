@@ -19,6 +19,10 @@ function goCompile {
 
 	pushd /golang/src/${TARGET}
 	ls -l
+	if [[ -f Makefile ]]; then
+		make all
+	fi
+
 	if [[ -d Godeps ]]; then
 		echo "godep restore"
 		godep restore
