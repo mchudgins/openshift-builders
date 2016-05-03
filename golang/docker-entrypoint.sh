@@ -90,7 +90,8 @@ if [[ "$1" = 'build' ]]; then
 	  fi
 	  popd
 		goCompile "${BUILD_DIR}"
-	  docker build --rm -t "${TAG}" "${BUILD_DIR}"
+		TARGET=`echo ${SOURCE_REPOSITORY} | sed 's!\(http://\)\|\(https://\)!!' | sed 's/\.git//'`
+	  docker build --rm -t "${TAG}" "${GOPATH}/src/${TARGET}/docker"
 	else
 	  docker build --rm -t "${TAG}" "${SOURCE_REPOSITORY}"
 	fi
