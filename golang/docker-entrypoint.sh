@@ -4,6 +4,17 @@ IFS=$'\n\t'
 
 printenv | sort
 
+function goCompile {
+	pushd $1
+	ls -l
+	mkdir /golang/src/app
+	cp -ra * /golang/src/app
+	popd
+
+	pushd /golang/src/app
+	go get ./...
+	popd
+}
 
 if [[ "$1" = 'build' ]]; then
 	DOCKER_SOCKET=/var/run/docker.sock
@@ -43,6 +54,7 @@ if [[ "$1" = 'build' ]]; then
 	    exit 1
 	  fi
 	  popd
+		goCompile "${BUILD_DIR}""
 	  docker build --rm -t "${TAG}" "${BUILD_DIR}"
 	else
 	  docker build --rm -t "${TAG}" "${SOURCE_REPOSITORY}"
