@@ -12,7 +12,11 @@ function goCompile {
 	popd
 
 	pushd /golang/src/app
+	ls -l
 	go get ./...
+
+	go build
+	ls -l
 	popd
 }
 
