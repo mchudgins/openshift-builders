@@ -18,6 +18,7 @@ function goCompile {
 
 	pushd /golang/src/${TARGET} >/dev/null
 	if [[ -f Makefile ]]; then
+		echo "Running make all"
 		make all
 		return
 	fi
@@ -45,9 +46,14 @@ if [[ "$1" = 'build' ]]; then
 
 	pushd /usr/local >/dev/null \
 		&& tar xfz ${GO_ARCHIVE} \
-		&& popd >/dev/null \
-		&& go version \
-		&& docker version
+		&& popd >/dev/null
+
+
+	if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
+		go version
+		echo "Docker version:"
+		docker version
+	fi
 
 	DOCKER_SOCKET=/var/run/docker.sock
 
