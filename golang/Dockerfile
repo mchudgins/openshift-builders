@@ -16,6 +16,7 @@ RUN apt-get update \
 	&& rm -r /var/lib/apt/lists/* \
 	&& curl -sL https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz -o /go-1.6.2.tar.gz \
 	&& curl -sL https://github.com/tools/godep/releases/download/v62/godep_linux_amd64 -o /usr/local/bin/godep \
+	&& chmod +x /usr/local/bin/godep \
 	&& mkdir /golang \
 	&& mkdir /golang/pkg \
 	&& mkdir /golang/src \

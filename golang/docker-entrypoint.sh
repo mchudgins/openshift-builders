@@ -16,9 +16,13 @@ function goCompile {
 
 	pushd /golang/src/app
 	ls -l
-	go get ./...
-
-	go build
+	if [[ -d Godeps ]]; then
+		godep restore
+		godep go build
+	else
+		go get ./...
+		go build
+	fi
 	ls -l
 	popd
 }
