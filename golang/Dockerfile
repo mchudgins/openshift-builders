@@ -9,6 +9,7 @@ MAINTAINER	Mike Hudgins <mchudgins@dstsystems.com> @mchudgins
 # update the package repo info
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
+	  ca-certificates \
 		curl \
 		git \
 	&& apt-get clean \
@@ -37,4 +38,3 @@ ENTRYPOINT ["/entrypoint.sh"]
 CMD [ "build" ]
 
 COPY docker-entrypoint.sh /entrypoint.sh
-
