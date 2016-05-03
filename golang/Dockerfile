@@ -23,10 +23,8 @@ RUN apt-get update \
 	&& mkdir /golang/src \
 	&& mkdir /golang/bin \
 	&& chmod o+rwx /golang \
-	&& curl -sL https://get.docker.com/builds/Linux/x86_64/docker-1.11.1.tgz -o /tmp/docker.tar.gz \
-	&& cd /tmp \
-	&& tar xfz docker.tar.gz \
-	&& mv docker/docker /usr/local/bin \
+	&& curl -sL https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 -o /usr/local/bin/docker \
+	&& chmod +x /usr/local/bin/docker \
 	&& cd / \
 	&& rm -rf /tmp/*
 
