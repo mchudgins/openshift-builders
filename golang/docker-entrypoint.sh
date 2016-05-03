@@ -54,7 +54,7 @@ if [[ "$1" = 'build' ]]; then
 	    exit 1
 	  fi
 	  popd
-		goCompile "${BUILD_DIR}""
+		goCompile "${BUILD_DIR}"
 	  docker build --rm -t "${TAG}" "${BUILD_DIR}"
 	else
 	  docker build --rm -t "${TAG}" "${SOURCE_REPOSITORY}"
