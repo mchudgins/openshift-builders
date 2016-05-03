@@ -10,15 +10,13 @@ if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
 fi
 
 function goCompile {
-	pushd $1
-	ls -l
+	pushd $1 >/dev/null
 	TARGET=`echo ${SOURCE_REPOSITORY} | sed 's!\(http://\)\|\(https://\)!!' | sed 's/\.git//'`
 	mkdir -p /golang/src/${TARGET}
 	cp -ra * /golang/src/${TARGET}
-	popd
+	popd >/dev/null
 
-	pushd /golang/src/${TARGET}
-	ls -l
+	pushd /golang/src/${TARGET} >/dev/null
 	if [[ -f Makefile ]]; then
 		make all
 		return
@@ -35,8 +33,7 @@ function goCompile {
 		echo go build
 		go build
 	fi
-	ls -l
-	popd
+	popd >/dev/null
 }
 
 if [[ "$1" = 'build' ]]; then
@@ -46,9 +43,9 @@ if [[ "$1" = 'build' ]]; then
 		exit 1
 	fi
 
-	pushd /usr/local \
+	pushd /usr/local >/dev/null \
 		&& tar xfz ${GO_ARCHIVE} \
-		&& popd \
+		&& popd >/dev/null \
 		&& go version \
 		&& docker version
 
@@ -82,13 +79,13 @@ if [[ "$1" = 'build' ]]; then
 	    echo "Error trying to fetch git source: ${SOURCE_REPOSITORY}"
 	    exit 1
 	  fi
-	  pushd "${BUILD_DIR}"
+	  pushd "${BUILD_DIR}" >/dev/null
 	  git checkout "${SOURCE_REF}"
 	  if [ $? != 0 ]; then
 	    echo "Error trying to checkout branch: ${SOURCE_REF}"
 	    exit 1
 	  fi
-	  popd
+	  popd >/dev/null
 		goCompile "${BUILD_DIR}"
 		TARGET=`echo ${SOURCE_REPOSITORY} | sed 's!\(http://\)\|\(https://\)!!' | sed 's/\.git//'`
 	  docker build --rm -t "${TAG}" "${GOPATH}/src/${TARGET}/docker"
