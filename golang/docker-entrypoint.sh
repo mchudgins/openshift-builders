@@ -32,7 +32,8 @@ fi
 pushd /usr/local \
 	&& tar xfz ${GO_ARCHIVE} \
 	&& popd \
-	&& go version
+	&& go version \
+	&& docker version
 
 #
 if [[ "$1" = 'build' ]]; then
