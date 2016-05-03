@@ -31,7 +31,7 @@ fi
 
 pushd /usr/local \
 	&& tar xfz ${GO_ARCHIVE} \
-	&& popd
+	&& popd \
 	&& go version
 
 #
