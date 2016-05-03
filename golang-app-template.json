@@ -37,14 +37,15 @@
                     "type": "Git"
                 },
                 "strategy": {
-                    "dockerStrategy": {
+                    "customStrategy": {
+                        "exposeDockerSocket": true,
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "${BASE_IMAGESTREAM}",
-                            "namespace": "openshift"
+                            "name": "golang:latest",
+                            "namespace": ""
                         }
                     },
-                    "type": "Docker"
+                    "type": "custom"
                 },
                 "triggers": [
                     {
