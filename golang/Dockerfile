@@ -14,10 +14,7 @@ RUN apt-get update \
 		git \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
-	&& curl -sL https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz -o /tmp/go.tar.gz \
-	&& cd /usr/local \
-	&& tar xfz /tmp/go.tar.gz \
-	&& rm -rf go/doc go/api go/blog go/misc go/src go/test \
+	&& curl -sL https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz -o /go-1.6.2.tar.gz \
 	&& mkdir /golang \
 	&& mkdir /golang/pkg \
 	&& mkdir /golang/src \

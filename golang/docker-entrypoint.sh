@@ -1,4 +1,7 @@
 #!/bin/bash
+
+GO_ARCHIVE=/go-1.6.2.tar.gz
+
 set -o pipefail
 IFS=$'\n\t'
 
@@ -20,6 +23,16 @@ function goCompile {
 	popd
 }
 
+# install go
+if [[ ! -f ${GO_ARCHIVE} ]]; then
+	echo "The go archive (${GO_ARCHIVE}) is missing.  Exiting..."
+	exit 1
+fi
+
+cd /usr/local \
+	&& tar xfz ${GO_ARCHIVE}
+
+#
 if [[ "$1" = 'build' ]]; then
 	DOCKER_SOCKET=/var/run/docker.sock
 
