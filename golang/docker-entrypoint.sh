@@ -5,42 +5,48 @@ GO_ARCHIVE=/go-1.6.2.tar.gz
 set -o pipefail
 IFS=$'\n\t'
 
-printenv | sort
+if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
+	printenv | sort
+fi
 
 function goCompile {
 	pushd $1
 	ls -l
-	mkdir /golang/src/app
-	cp -ra * /golang/src/app
+	TARGET=`echo ${SOURCE_REPOSITORY} | sed 's!\(http://\)\|\(https://\)!!' | sed 's/\.git//'`
+	mkdir -p /golang/src/${TARGET}
+	cp -ra * /golang/src/${TARGET}
 	popd
 
-	pushd /golang/src/app
+	pushd /golang/src/${TARGET}
 	ls -l
 	if [[ -d Godeps ]]; then
+		echo "godep restore"
 		godep restore
+		echo "godep go build"
 		godep go build
 	else
+		echo go get ./...
 		go get ./...
+		echo go build
 		go build
 	fi
 	ls -l
 	popd
 }
 
-# install go
-if [[ ! -f ${GO_ARCHIVE} ]]; then
-	echo "The go archive (${GO_ARCHIVE}) is missing.  Exiting..."
-	exit 1
-fi
-
-pushd /usr/local \
-	&& tar xfz ${GO_ARCHIVE} \
-	&& popd \
-	&& go version \
-	&& docker version
-
-#
 if [[ "$1" = 'build' ]]; then
+	# install go
+	if [[ ! -f ${GO_ARCHIVE} ]]; then
+		echo "The go archive (${GO_ARCHIVE}) is missing.  Exiting..."
+		exit 1
+	fi
+
+	pushd /usr/local \
+		&& tar xfz ${GO_ARCHIVE} \
+		&& popd \
+		&& go version \
+		&& docker version
+
 	DOCKER_SOCKET=/var/run/docker.sock
 
 	if [ ! -e "${DOCKER_SOCKET}" ]; then
