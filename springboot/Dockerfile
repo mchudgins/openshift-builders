@@ -14,12 +14,6 @@ ENV ARTIFACT_URL http://artifacts-scm.dstcorp.net/artifactory/horizon-libs-snaps
 RUN yum install -y ca-certificates curl \
 	&& yum clean all
 
-RUN	curl -sL https://s3.amazonaws.com/aws-cli/awscli-bundle.zip -o awscli-bundle.zip \
-	&& unzip awscli-bundle.zip \
-	&& ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \
-	&& rm awscli-bundle.zip \
-	&& rm -rf awscli-bundle
-
 RUN	curl -sL ${ARTIFACT_URL} -o /app.jar \
 	&& chmod ugo+rwx /app.jar
 
