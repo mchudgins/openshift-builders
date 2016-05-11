@@ -27,6 +27,7 @@ COPY docker-entrypoint.sh /entrypoint.sh
 
 RUN	echo ${ARTIFACT_URI} > /artifact.id \
 	&& curl -sL ${ARTIFACT_URI} -o /app.jar \
-	&& chmod ugo+rx /app.jar
+	&& chmod ugo+rx /app.jar \
+	&& chmod ugo+rx /entrypoint.sh
 
 
