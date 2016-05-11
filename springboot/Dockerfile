@@ -9,16 +9,22 @@ LABEL io.k8s.description="A springboot builder" \
       io.k8s.display-name="Springboot Builder" \
       io.openshift.tags="springboot"
 
-ENV ARTIFACT_URL http://artifacts-scm.dstcorp.net/artifactory/horizon-libs-snapshot-local/com/dstsystems/horizon/Horizon-Batch/0.0.2-SNAPSHOT/Horizon-Batch-0.0.2-SNAPSHOT.jar
+ENV APPFLAGS -Djava.security.egd=file:/dev/./urandom
+ENV ARTIFACT_URI
 
 RUN yum install -y ca-certificates curl java-1.8.0-openjdk \
 	&& yum clean all
 
-RUN	curl -sL ${ARTIFACT_URL} -o /app.jar \
-	&& chmod ugo+rwx /app.jar
+EXPOSE 8080
 
-RUN java -version
+ENTRYPOINT ["/entrypoint.sh"]
 
-RUN javac -version
+CMD [ "runapp" ]
+
+COPY docker-entrypoint.sh /entrypoint.sh
+
+RUN	echo ${ARTIFACT_URL} > /artifact.id \
+	&& curl -sL ${ARTIFACT_URL} -o /app.jar \
+	&& chmod ugo+rx /app.jar
 
 
