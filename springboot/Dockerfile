@@ -3,7 +3,7 @@
 #
 
 # behavior of the build depends on two ENV variables:
-#	ARTIFACT_URL -- the URL from which to download the springboot jar
+#	ARTIFACT_URI -- the URL from which to download the springboot jar
 #	APPFLAGS -- defines the flags passed to the springboot jar when launched
 #
 
@@ -25,8 +25,8 @@ CMD [ "runapp" ]
 
 COPY docker-entrypoint.sh /entrypoint.sh
 
-RUN	echo ${ARTIFACT_URL} > /artifact.id \
-	&& curl -sL ${ARTIFACT_URL} -o /app.jar \
+RUN	echo ${ARTIFACT_URI} > /artifact.id \
+	&& curl -sL ${ARTIFACT_URI} -o /app.jar \
 	&& chmod ugo+rx /app.jar
 
 
