@@ -10,7 +10,7 @@ LABEL io.k8s.description="A springboot builder" \
       io.openshift.tags="springboot"
 
 ENV APPFLAGS -Djava.security.egd=file:/dev/./urandom
-ENV ARTIFACT_URI
+ENV ARTIFACT_URI ""
 
 RUN yum install -y ca-certificates curl java-1.8.0-openjdk \
 	&& yum clean all
