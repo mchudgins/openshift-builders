@@ -14,9 +14,6 @@ LABEL io.k8s.description="A springboot builder" \
       io.k8s.display-name="Springboot Builder" \
       io.openshift.tags="springboot"
 
-RUN yum install -y ca-certificates curl java-1.8.0-openjdk \
-	&& yum clean all
-
 EXPOSE 8080
 
 ENTRYPOINT ["/entrypoint.sh"]
