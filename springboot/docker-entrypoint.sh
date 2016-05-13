@@ -20,12 +20,12 @@ if [[ "$1" = 'runapp' ]]; then
 	#
 #	cp /usr/local/share/ca-certificates/dst-root-ca.crt /etc/apache2/certs/accepted-proxy-ca-bundle.pem
 
-	if [[ -z "${APPFLAGS}" ]]; then
-		APPFLAGS=-Djava.security.egd=file:/dev/./urandom
+	if [[ -z "${JAVA_FLAGS}" ]]; then
+		JAVA_FLAGS=-Djava.security.egd=file:/dev/./urandom
 	fi
 
 	echo "exec java ${APPFLAGS} -jar /app.jar (`cat /artifact.id`)"
-	exec java ${APPFLAGS} -jar /app.jar
+	exec java ${JAVA_FLAGS} -jar /app.jar ${APP_FLAGS}
 fi
 
 exec "$@"
