@@ -24,7 +24,7 @@ if [[ "$1" = 'runapp' ]]; then
 		JAVA_FLAGS=-Djava.security.egd=file:/dev/./urandom
 	fi
 
-	echo "exec java ${APPFLAGS} -jar /app.jar (`cat /artifact.id`)"
+	echo "exec java ${JAVA_FLAGS} -jar /app.jar ${APP_FLAGS} (`cat /artifact.id`)"
 	exec java ${JAVA_FLAGS} -jar /app.jar ${APP_FLAGS}
 fi
 
