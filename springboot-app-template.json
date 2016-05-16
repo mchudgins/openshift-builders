@@ -38,6 +38,7 @@
                 }, 
                 "strategy": {
                     "dockerStrategy": {
+                        "noCache": "true",
                         "env": [
                             {
                                 "name": "http_proxy", 
