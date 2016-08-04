@@ -12,7 +12,8 @@ MAINTAINER	Mike Hudgins <mchudgins@dstsystems.com> @mchudgins
 
 LABEL io.k8s.description="A springboot builder" \
       io.k8s.display-name="Springboot Builder" \
-      io.openshift.tags="springboot"
+      io.openshift.tags="springboot" \
+      com.dstsystems.jar="${ARTIFACT_URI"}
 
 EXPOSE 8080
 
