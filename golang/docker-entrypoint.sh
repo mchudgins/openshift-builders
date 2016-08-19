@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GO_ARCHIVE=/go-1.6.2.tar.gz
+GO_ARCHIVE=/go-1.7.tar.gz
 
 set -o pipefail
 IFS=$'\n\t'
