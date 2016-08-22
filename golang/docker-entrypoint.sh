@@ -21,11 +21,11 @@ function goCompile {
 
 	pushd /golang/src/${TARGET} >/dev/null
 	if [[ -f Makefile ]]; then
-		echo "Current working directory: " `pwd`
-		echo "Env:"
-		printenv | sort
-		echo "Source contents:"
-		ls -Al
+		if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
+			echo "Current working directory: " `pwd`
+			echo "Source contents:"
+			ls -Al
+		fi
 		echo "Running make all"
 		make all
 		return
