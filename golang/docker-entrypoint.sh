@@ -2,6 +2,8 @@
 
 GO_ARCHIVE=/go-1.7.tar.gz
 
+export PATH=${PATH}:/usr/local/go/bin
+
 set -o pipefail
 IFS=$'\n\t'
 
@@ -47,7 +49,7 @@ if [[ "$1" = 'build' ]]; then
 	fi
 
 	pushd /usr/local >/dev/null \
-		&& tar xvfz ${GO_ARCHIVE} \
+		&& tar xfz ${GO_ARCHIVE} \
 		&& popd >/dev/null
 
 
