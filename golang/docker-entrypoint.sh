@@ -93,13 +93,13 @@ if [[ "$1" = 'build' ]]; then
 
 	if [ -n "${SOURCE_REF}" ]; then
 	  BUILD_DIR=$(mktemp --directory)
-	  git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}"
+	  git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}" >>/tmp/git.lis 
 	  if [ $? != 0 ]; then
 	    echo "Error trying to fetch git source: ${SOURCE_REPOSITORY}"
 	    exit 1
 	  fi
 	  pushd "${BUILD_DIR}" >/dev/null
-	  git checkout "${SOURCE_REF}"
+	  git checkout "${SOURCE_REF}" >>/tmp/git.lis
 	  if [ $? != 0 ]; then
 	    echo "Error trying to checkout branch: ${SOURCE_REF}"
 	    exit 1
