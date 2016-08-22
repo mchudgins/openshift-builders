@@ -16,10 +16,12 @@ function goCompile {
 	TARGET=`echo ${SOURCE_REPOSITORY} | sed 's!\(http://\)\|\(https://\)!!' | sed 's/\.git//'`
 	mkdir -p /golang/src/${TARGET}
 	cp -ra * /golang/src/${TARGET}
+	cp -ra .* /golang/src/${TARGET} 2>/dev/null
 	popd >/dev/null
 
 	pushd /golang/src/${TARGET} >/dev/null
 	if [[ -f Makefile ]]; then
+		echo "Current working directory: " `pwd`
 		echo "Env:"
 		printenv | sort
 		echo "Source contents:"
