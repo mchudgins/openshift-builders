@@ -22,14 +22,6 @@ function goCompile {
 	if [[ -f Makefile ]]; then
 		echo "Source contents:"
 		ls -al
-		echo "go version: " `go version`
-		echo "PATH:  " ${PATH}
-		echo "contents of /usr/local:"
-		ls -l /usr/local/
-		echo "contents of /usr/local/go: "
-		ls -l /usr/local/go
-		echo "contents of /usr/local/go/bin:"
-		ls -l /usr/local/go/bin
 		echo "Running make all"
 		make all
 		return
@@ -60,6 +52,11 @@ if [[ "$1" = 'build' ]]; then
 		&& tar xfz ${GO_ARCHIVE} \
 		&& popd >/dev/null
 
+	#
+	# set git config info
+	#
+	git config --global --add user.name golang.builder
+	git config --global --add user.email golang-builder@dstresearch.com
 
 	if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
 		go version
