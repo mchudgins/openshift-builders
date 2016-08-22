@@ -23,7 +23,7 @@ function goCompile {
 		echo "Env:"
 		printenv | sort
 		echo "Source contents:"
-		ls -al
+		ls -Al
 		echo "Running make all"
 		make all
 		return
@@ -57,7 +57,7 @@ if [[ "$1" = 'build' ]]; then
 	#
 	# set git config info
 	#
-	git config --global --add user.name golang.builder
+	git config --global --add user.name ${OPENSHIFT_BUILD_NAMESPACE}-${OPENSHIFT_BUILD_REFERENCE}-${OPENSHIFT_BUILD_NAME}
 	git config --global --add user.email golang-builder@dstresearch.com
 
 	if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
