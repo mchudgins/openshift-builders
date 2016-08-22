@@ -26,6 +26,10 @@ function goCompile {
 		echo "PATH:  " ${PATH}
 		echo "contents of /usr/local:"
 		ls -l /usr/local/
+		echo "contents of /usr/local/go: "
+		ls -l /usr/local/go
+		echo "contents of /usr/local/go/bin:"
+		ls -l /usr/local/go/bin
 		echo "Running make all"
 		make all
 		return
