@@ -22,6 +22,10 @@ function goCompile {
 	if [[ -f Makefile ]]; then
 		echo "Source contents:"
 		ls -al
+		echo "go version: " `go version`
+		echo "PATH:  " ${PATH}
+		echo "contents of /usr/local:"
+		ls -l /usr/local/
 		echo "Running make all"
 		make all
 		return
