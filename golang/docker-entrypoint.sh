@@ -18,6 +18,8 @@ function goCompile {
 
 	pushd /golang/src/${TARGET} >/dev/null
 	if [[ -f Makefile ]]; then
+		echo "Source contents:"
+		ls -al
 		echo "Running make all"
 		make all
 		return
