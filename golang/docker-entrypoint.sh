@@ -47,7 +47,7 @@ if [[ "$1" = 'build' ]]; then
 	fi
 
 	pushd /usr/local >/dev/null \
-		&& tar xfz ${GO_ARCHIVE} \
+		&& tar xvfz ${GO_ARCHIVE} \
 		&& popd >/dev/null
 
 
