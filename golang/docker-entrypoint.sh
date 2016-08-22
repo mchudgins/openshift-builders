@@ -20,6 +20,8 @@ function goCompile {
 
 	pushd /golang/src/${TARGET} >/dev/null
 	if [[ -f Makefile ]]; then
+		echo "Env:"
+		printenv | sort
 		echo "Source contents:"
 		ls -al
 		echo "Running make all"
