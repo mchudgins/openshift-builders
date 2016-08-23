@@ -4,6 +4,10 @@ GO_ARCHIVE=/go-1.7.tar.gz
 
 export PATH=${PATH}:/usr/local/go/bin
 
+if [[ -z "${GOPATH}" ]]; then
+	GOPATH=/golang
+fi
+
 set -o pipefail
 IFS=$'\n\t'
 
