@@ -1,6 +1,12 @@
 #!/bin/bash
 
-GO_ARCHIVE=/go-1.6.2.tar.gz
+GO_ARCHIVE=/go-1.7.tar.gz
+
+export PATH=${PATH}:/usr/local/go/bin
+
+if [[ -z "${GOPATH}" ]]; then
+	GOPATH=/golang
+fi
 
 set -o pipefail
 IFS=$'\n\t'
@@ -14,10 +20,16 @@ function goCompile {
 	TARGET=`echo ${SOURCE_REPOSITORY} | sed 's!\(http://\)\|\(https://\)!!' | sed 's/\.git//'`
 	mkdir -p /golang/src/${TARGET}
 	cp -ra * /golang/src/${TARGET}
+	cp -ra .* /golang/src/${TARGET} 2>/dev/null
 	popd >/dev/null
 
 	pushd /golang/src/${TARGET} >/dev/null
 	if [[ -f Makefile ]]; then
+		if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
+			echo "Current working directory: " `pwd`
+			echo "Source contents:"
+			ls -Al
+		fi
 		echo "Running make all"
 		make all
 		return
@@ -48,6 +60,11 @@ if [[ "$1" = 'build' ]]; then
 		&& tar xfz ${GO_ARCHIVE} \
 		&& popd >/dev/null
 
+	#
+	# set git config info
+	#
+	git config --global --add user.name ${OPENSHIFT_BUILD_NAMESPACE}-${OPENSHIFT_BUILD_REFERENCE}-${OPENSHIFT_BUILD_NAME}
+	git config --global --add user.email golang-builder@dstresearch.com
 
 	if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
 		go version
@@ -80,13 +97,13 @@ if [[ "$1" = 'build' ]]; then
 
 	if [ -n "${SOURCE_REF}" ]; then
 	  BUILD_DIR=$(mktemp --directory)
-	  git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}"
+	  git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}" >>/tmp/git.lis 
 	  if [ $? != 0 ]; then
 	    echo "Error trying to fetch git source: ${SOURCE_REPOSITORY}"
 	    exit 1
 	  fi
 	  pushd "${BUILD_DIR}" >/dev/null
-	  git checkout "${SOURCE_REF}"
+	  git checkout "${SOURCE_REF}" >>/tmp/git.lis
 	  if [ $? != 0 ]; then
 	    echo "Error trying to checkout branch: ${SOURCE_REF}"
 	    exit 1

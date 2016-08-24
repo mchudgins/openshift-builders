@@ -1,0 +1,256 @@
+{
+    "apiVersion": "v1", 
+    "kind": "Template", 
+    "labels": {
+        "application": "springboot", 
+        "createdBy": "springboot-app-template"
+    }, 
+    "metadata": {
+        "annotations": {
+            "description": "Packages a springboot jar using a git repository with a Dockerfile and an existing, base image stream", 
+            "iconClass": "icon-shadowman", 
+            "tags": "builder, springboot, java"
+        }, 
+        "name": "springboot-app"
+    }, 
+    "objects": [
+        {
+            "apiVersion": "v1", 
+            "kind": "BuildConfig", 
+            "metadata": {
+                "name": "${APPLICATION}"
+            }, 
+            "spec": {
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag", 
+                        "name": "${APPLICATION}:latest"
+                    }
+                }, 
+                "resources": {}, 
+                "source": {
+                    "contextDir": "${CONTEXT_DIR}", 
+                    "git": {
+                        "ref": "${GIT_REF}", 
+                        "uri": "${GIT_URI}"
+                    }, 
+                    "type": "Git"
+                }, 
+                "strategy": {
+                    "dockerStrategy": {
+                        "noCache": true,
+                        "env": [
+                            {
+                                "name": "http_proxy", 
+                                "value": "https://awdinfra:Infrast12%23@dstproxy.dstcorp.net:9119"
+                            }, 
+                            {
+                                "name": "https_proxy", 
+                                "value": "https://awdinfra:Infrast12%23@dstproxy.dstcorp.net:9119"
+                            }, 
+                            {
+                                "name": "NO_PROXY", 
+                                "value": "localhost, 172.30.209.20:5000, .dstcorp.net"
+                            }, 
+                            {
+                                "name": "ARTIFACT_URI", 
+                                "value": "${ARTIFACT}"
+                            }
+                        ], 
+                        "from": {
+                            "kind": "ImageStreamTag", 
+                            "name": "${BASE_IMAGESTREAM}", 
+                            "namespace": "openshift"
+                        }
+                    }, 
+                    "type": "Docker"
+                }, 
+                "triggers": [
+                    {
+                        "github": {
+                            "secret": "${GITHUB_TRIGGER_SECRET}"
+                        }, 
+                        "type": "GitHub"
+                    }, 
+                    {
+                        "generic": {
+                            "secret": "${GENERIC_TRIGGER_SECRET}"
+                        }, 
+                        "type": "Generic"
+                    }, 
+                    {
+                        "imageChange": {}, 
+                        "type": "ImageChange"
+                    }
+                ]
+            }
+        }, 
+        {
+            "apiVersion": "v1", 
+            "kind": "ImageStream", 
+            "metadata": {
+                "name": "${APPLICATION}"
+            }, 
+            "spec": {
+                "dockerImageRepository": "", 
+                "tags": [
+                    {
+                        "from": {
+                            "kind": "ImageStreamTag", 
+                            "name": "${APPLICATION}:latest"
+                        }, 
+                        "name": "latest"
+                    }
+                ]
+            }
+        }, 
+        {
+            "apiVersion": "v1", 
+            "kind": "DeploymentConfig", 
+            "metadata": {
+                "name": "${APPLICATION}"
+            }, 
+            "spec": {
+                "replicas": 1, 
+                "selector": {
+                    "deploymentconfig": "${APPLICATION}"
+                }, 
+                "strategy": {
+                    "resources": {}, 
+                    "rollingParams": {
+                        "intervalSeconds": 1, 
+                        "timeoutSeconds": 600, 
+                        "updatePeriodSeconds": 1
+                    }, 
+                    "type": "Rolling"
+                }, 
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "deploymentconfig": "${APPLICATION}"
+                        }
+                    }, 
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "${APPLICATION}", 
+                                "imagePullPolicy": "IfNotPresent", 
+                                "livenessProbe": {
+                                    "initialDelaySeconds": 30, 
+                                    "tcpSocket": {
+                                        "port": 8080
+                                    }, 
+                                    "timeoutSeconds": 1
+                                }, 
+                                "name": "${APPLICATION}", 
+                                "ports": [
+                                    {
+                                        "containerPort": 8080, 
+                                        "protocol": "TCP"
+                                    }
+                                ], 
+                                "resources": {}, 
+                                "securityContext": {
+                                    "capabilities": {}, 
+                                    "privileged": false
+                                }, 
+                                "terminationMessagePath": "/dev/termination-log"
+                            }
+                        ], 
+                        "dnsPolicy": "ClusterFirst", 
+                        "restartPolicy": "Always"
+                    }
+                }, 
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    }, 
+                    {
+                        "imageChangeParams": {
+                            "automatic": true, 
+                            "containerNames": [
+                                "${APPLICATION}"
+                            ], 
+                            "from": {
+                                "kind": "ImageStreamTag", 
+                                "name": "${APPLICATION}:latest"
+                            }
+                        }, 
+                        "type": "ImageChange"
+                    }
+                ]
+            }
+        }, 
+        {
+            "apiVersion": "v1", 
+            "kind": "Service", 
+            "metadata": {
+                "name": "${APPLICATION}"
+            }, 
+            "spec": {
+                "ports": [
+                    {
+                        "name": "${APPLICATION}-http", 
+                        "port": 8080, 
+                        "targetPort": 8080
+                    }
+                ], 
+                "selector": {
+                    "deploymentconfig": "${APPLICATION}"
+                }, 
+                "sessionAffinity": "None", 
+                "type": "ClusterIP"
+            }
+        }
+    ], 
+    "parameters": [
+        {
+            "description": "The name for the new application.", 
+            "displayName": "Application Name", 
+            "name": "APPLICATION", 
+            "reqired": true, 
+            "value": ""
+        }, 
+        {
+            "description": "The URI of the maven/artifactory artifact that you want to run.", 
+            "displayName": "Artifact URI", 
+            "name": "ARTIFACT", 
+            "required": true, 
+            "value": "http://artifacts-scm.dstcorp.net/artifactory/horizon-libs-snapshot-local/com/dstsystems/horizon/Horizon-Batch/0.0.2-SNAPSHOT/Horizon-Batch-0.0.2-SNAPSHOT.jar"
+        }, 
+        {
+            "description": "The name:tag of the existing, base imagestream upon which this new imagestream builds.", 
+            "displayName": "Base Imagestream Name", 
+            "name": "BASE_IMAGESTREAM", 
+            "required": true, 
+            "value": "java:8"
+        }, 
+        {
+            "description": "Git source URI for container definition (don't change this unless you know what you're doing).", 
+            "name": "GIT_URI", 
+            "value": "http://bigred.awddev.dstcorp.net/git/openshift-builders"
+        }, 
+        {
+            "description": "Git branch/tag reference (ditto).", 
+            "name": "GIT_REF", 
+            "value": "master"
+        }, 
+        {
+            "description": "Git Directory (ditto)", 
+            "name": "CONTEXT_DIR", 
+            "value": "/springboot"
+        }, 
+        {
+            "description": "Github trigger secret", 
+            "from": "[a-zA-Z0-9]{8}", 
+            "generate": "expression", 
+            "name": "GITHUB_TRIGGER_SECRET"
+        }, 
+        {
+            "description": "Generic build trigger secret", 
+            "from": "[a-zA-Z0-9]{8}", 
+            "generate": "expression", 
+            "name": "GENERIC_TRIGGER_SECRET"
+        }
+    ]
+}
