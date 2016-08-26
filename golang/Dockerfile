@@ -7,17 +7,18 @@ FROM		debian
 MAINTAINER	Mike Hudgins <mchudgins@dstsystems.com> @mchudgins
 
 # update the package repo info
-RUN apt-get update \
-	&& apt-get install -y --no-install-recommends \
+RUN apt-get update -q \
+	&& apt-get install -q -y --no-install-recommends \
 		bzip2 \
 		ca-certificates \
 		curl \
 		git \
 		make \
+		unzip \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
 	&& curl -sL https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz -o /tmp/go-1.7.tar.gz \
-	&& cd /usr/local && tar xvfz /tmp/go-1.7.tar.gz && cd - \
+	&& cd /usr/local && tar xfz /tmp/go-1.7.tar.gz && cd - \
 	&& curl -sL https://github.com/tools/godep/releases/download/v74/godep_linux_amd64 -o /usr/local/bin/godep \
 	&& chmod +x /usr/local/bin/godep \
 	&& echo 'downloading upx...' \
@@ -38,10 +39,10 @@ RUN apt-get update \
 	&& curl -sL https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 -o /usr/local/bin/docker \
 	&& chmod +x /usr/local/bin/docker \
 	&& cd / \
-	&& go get google.golang.org/grpc \
-	&& go get -u github.com/golang/protobuf/{proto,protoc-gen-go} \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang go get google.golang.org/grpc \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang go get -u github.com/golang/protobuf/proto \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang go get -u github.com/golang/protobuf/protoc-gen-go \
 	&& rm -rf /tmp/*
-
 
 ENV PATH /bin:/usr/bin:/usr/local/bin:/usr/local/go/bin
 ENV GOPATH /golang
