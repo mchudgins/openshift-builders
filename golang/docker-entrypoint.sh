@@ -50,6 +50,7 @@ function goCompile {
 }
 
 if [[ "$1" = 'build' ]]; then
+	echo "Building ${SOURCE_REPOSITORY}, branch ${SOURCE_REF} using image ${OPENSHIFT_BUILD_NAMESPACE}-${OPENSHIFT_BUILD_REFERENCE}-${OPENSHIFT_BUILD_NAME}"
 	# install go
 #	if [[ ! -f ${GO_ARCHIVE} ]]; then
 #		echo "The go archive (${GO_ARCHIVE}) is missing.  Exiting..."
@@ -99,7 +100,7 @@ git config --global --add user.email golang-builder@dstresearch.com
 	  BUILD_DIR=$(mktemp --directory)
 		GIT_REPO=`echo ${SOURCE_REPOSITORY} | sed 's|^https://||' | sed 's|^http://||' | sed 's|^git://||' | sed 's|^git@||' | sed 's|\.git$||'`
 	  #git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}" >>/tmp/git.lis
-		go get ${GIT_REPO}/...
+		go get ${GIT_REPO}
 #	  if [ $? != 0 ]; then
 #	    echo "Error trying to fetch git source: ${SOURCE_REPOSITORY}"
 #	    exit 1
