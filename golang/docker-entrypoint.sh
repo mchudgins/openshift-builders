@@ -98,14 +98,16 @@ git config --global --add user.email golang-builder@dstresearch.com
 
 	if [ -n "${SOURCE_REF}" ]; then
 	  BUILD_DIR=$(mktemp --directory)
-		GIT_REPO=`echo ${SOURCE_REPOSITORY} | sed 's|^https://||' | sed 's|^http://||' | sed 's|^git://||' | sed 's|^git@||' | sed 's|\.git$||'`
-	  #git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}" >>/tmp/git.lis
-		echo "go get ${GIT_REPO}"
-		go get ${GIT_REPO}
-#	  if [ $? != 0 ]; then
-#	    echo "Error trying to fetch git source: ${SOURCE_REPOSITORY}"
-#	    exit 1
-#	  fi
+		echo "git clone --recursive ${SOURCE_REPOSITORY} ${BUILD_DIR}"
+	  git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}" >>/tmp/git.lis
+#		GIT_REPO=`echo ${SOURCE_REPOSITORY} | sed 's|^https://||' | sed 's|^http://||' | sed 's|^git://||' | sed 's|^git@||' | sed 's|\.git$||'`
+#		echo "go get ${GIT_REPO}"
+#		go get ${GIT_REPO}
+	  if [ $? != 0 ]; then
+	    echo "Error trying to fetch git source: ${SOURCE_REPOSITORY}"
+	    exit 1
+	  fi
+
 	  pushd "${BUILD_DIR}" >/dev/null
 		echo "git checkout ${SOURCE_REF} (in subdirectory ${BUILD_DIR})"
 	  git checkout "${SOURCE_REF}" >>/tmp/git.lis
