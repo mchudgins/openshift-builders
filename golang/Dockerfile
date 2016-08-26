@@ -16,7 +16,8 @@ RUN apt-get update \
 		make \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
-	&& curl -sL https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz -o /go-1.7.tar.gz \
+	&& curl -sL https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz -o /tmp/go-1.7.tar.gz \
+	&& cd /usr/local && tar xvfz /tmp/go-1.7.tar.gz && cd - \
 	&& curl -sL https://github.com/tools/godep/releases/download/v74/godep_linux_amd64 -o /usr/local/bin/godep \
 	&& chmod +x /usr/local/bin/godep \
 	&& echo 'downloading upx...' \
@@ -32,6 +33,7 @@ RUN apt-get update \
 	&& chmod +x /usr/local/bin/docker \
 	&& cd / \
 	&& rm -rf /tmp/*
+
 
 ENV PATH /bin:/usr/bin:/usr/local/bin:/usr/local/go/bin
 ENV GOPATH /golang

@@ -51,20 +51,20 @@ function goCompile {
 
 if [[ "$1" = 'build' ]]; then
 	# install go
-	if [[ ! -f ${GO_ARCHIVE} ]]; then
-		echo "The go archive (${GO_ARCHIVE}) is missing.  Exiting..."
-		exit 1
-	fi
+#	if [[ ! -f ${GO_ARCHIVE} ]]; then
+#		echo "The go archive (${GO_ARCHIVE}) is missing.  Exiting..."
+#		exit 1
+#	fi
+#
+#	pushd /usr/local >/dev/null \
+#		&& tar xfz ${GO_ARCHIVE} \
+#		&& popd >/dev/null
 
-	pushd /usr/local >/dev/null \
-		&& tar xfz ${GO_ARCHIVE} \
-		&& popd >/dev/null
-
-	#
-	# set git config info
-	#
-	git config --global --add user.name ${OPENSHIFT_BUILD_NAMESPACE}-${OPENSHIFT_BUILD_REFERENCE}-${OPENSHIFT_BUILD_NAME}
-	git config --global --add user.email golang-builder@dstresearch.com
+#
+# set git config info
+#
+git config --global --add user.name ${OPENSHIFT_BUILD_NAMESPACE}-${OPENSHIFT_BUILD_REFERENCE}-${OPENSHIFT_BUILD_NAME}
+git config --global --add user.email golang-builder@dstresearch.com
 
 	if [[ ${BUILD_LOGLEVEL} -gt 1 ]]; then
 		go version
