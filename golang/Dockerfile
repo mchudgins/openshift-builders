@@ -44,8 +44,8 @@ RUN apt-get update -q \
 	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang go get -u github.com/golang/protobuf/protoc-gen-go \
 	&& rm -rf /tmp/*
 
-ENV PATH /bin:/usr/bin:/usr/local/bin:/usr/local/go/bin
 ENV GOPATH /golang
+ENV PATH /bin:/usr/bin:/usr/local/bin:/usr/local/go/bin:${GOPATH}/bin
 
 ENTRYPOINT ["/entrypoint.sh"]
 
