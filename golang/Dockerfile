@@ -24,6 +24,12 @@ RUN apt-get update \
 	&& curl -sL http://upx.sourceforge.net/download/upx-3.91-amd64_linux.tar.bz2 -o /tmp/upx.tar.bz2 \
 		&& ls /tmp \
 		&& cd /tmp && tar xvfj /tmp/upx.tar.bz2 && mv upx-*-amd64_linux/upx /usr/local/bin && cd - \
+	&& echo 'downloading protoc' \
+	&& cd /tmp \
+	&& curl -sL https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip -o /tmp/protoc.zip \
+	&& unzip /tmp/protoc.zip \
+	&& cp /tmp/bin/protoc /usr/local/bin \
+	&& cd - \
 	&& mkdir /golang \
 	&& mkdir /golang/pkg \
 	&& mkdir /golang/src \
@@ -32,6 +38,8 @@ RUN apt-get update \
 	&& curl -sL https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 -o /usr/local/bin/docker \
 	&& chmod +x /usr/local/bin/docker \
 	&& cd / \
+	&& go get google.golang.org/grpc \
+	&& go get -u github.com/golang/protobuf/{proto,protoc-gen-go} \
 	&& rm -rf /tmp/*
 
 
