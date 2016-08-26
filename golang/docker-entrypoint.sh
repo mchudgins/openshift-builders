@@ -97,7 +97,8 @@ if [[ "$1" = 'build' ]]; then
 
 	if [ -n "${SOURCE_REF}" ]; then
 	  BUILD_DIR=$(mktemp --directory)
-	  git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}" >>/tmp/git.lis 
+	  //git clone --recursive "${SOURCE_REPOSITORY}" "${BUILD_DIR}" >>/tmp/git.lis
+		go get ${SOURCE_REPOSITORY}/...
 	  if [ $? != 0 ]; then
 	    echo "Error trying to fetch git source: ${SOURCE_REPOSITORY}"
 	    exit 1
