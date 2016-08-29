@@ -39,9 +39,16 @@ RUN apt-get update -q \
 	&& curl -sL https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 -o /usr/local/bin/docker \
 	&& chmod +x /usr/local/bin/docker \
 	&& cd / \
-	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang go get google.golang.org/grpc \
-	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang go get -u github.com/golang/protobuf/proto \
-	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang go get -u github.com/golang/protobuf/protoc-gen-go \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
+			go get google.golang.org/grpc \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
+			go get -u github.com/golang/protobuf/proto \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
+			go get -u github.com/golang/protobuf/protoc-gen-go \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
+			go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
+			go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
 	&& rm -rf /tmp/*
 
 ENV GOPATH /golang
