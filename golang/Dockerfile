@@ -31,7 +31,6 @@ RUN apt-get update -q \
 	&& unzip /tmp/protoc.zip \
 	&& cp /tmp/bin/protoc /usr/local/bin \
 	&& cp -ra /tmp/include/* /usr/local/include/ \
-	&& cp /tmp/include
 	&& cd - \
 	&& mkdir /golang \
 	&& mkdir /golang/pkg \
