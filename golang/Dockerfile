@@ -51,7 +51,7 @@ RUN apt-get update -q \
 	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
 			go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
 	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
-			go get -u github.com/jteeuwen/go-bindata \
+			go get -u github.com/jteeuwen/go-bindata/... \
 	&& rm -rf /tmp/* \
 	&& echo "The following go apps were installed into /golang/bin:" \
 	&& ls -l /golang/bin
