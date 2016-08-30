@@ -30,6 +30,8 @@ RUN apt-get update -q \
 	&& curl -sL https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip -o /tmp/protoc.zip \
 	&& unzip /tmp/protoc.zip \
 	&& cp /tmp/bin/protoc /usr/local/bin \
+	&& cp -ra /tmp/include/* /usr/local/include/ \
+	&& cp /tmp/include
 	&& cd - \
 	&& mkdir /golang \
 	&& mkdir /golang/pkg \
