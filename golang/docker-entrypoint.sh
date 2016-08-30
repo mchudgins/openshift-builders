@@ -50,7 +50,7 @@ function goCompile {
 }
 
 if [[ "$1" = 'build' ]]; then
-	echo "Building ${SOURCE_REPOSITORY}, branch ${SOURCE_REF} using image ${OPENSHIFT_BUILD_NAMESPACE}-${OPENSHIFT_BUILD_REFERENCE}-${OPENSHIFT_BUILD_NAME}"
+	echo "Building ${SOURCE_REPOSITORY}, branch ${SOURCE_REF} using image ${OPENSHIFT_BUILD_NAMESPACE}/${OPENSHIFT_BUILD_NAME}(${OPENSHIFT_BUILD_REFERENCE})"
 	# install go
 #	if [[ ! -f ${GO_ARCHIVE} ]]; then
 #		echo "The go archive (${GO_ARCHIVE}) is missing.  Exiting..."
