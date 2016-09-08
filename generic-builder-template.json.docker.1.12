@@ -1,0 +1,132 @@
+{
+    "apiVersion": "v1",
+    "kind": "Template",
+    "labels": {
+        "application": "docker-imagestream-builder",
+        "createdBy": "template-docker-imagestream-builder"
+    },
+    "metadata": {
+        "annotations": {
+            "description": "Builds an image stream from a git repository with a Dockerfile and an existing, base image stream",
+            "iconClass": "",
+            "tags": "builder"
+        },
+        "name": "docker-imagestream-builder"
+    },
+    "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "BuildConfig",
+            "metadata": {
+                "name": "${IMAGESTREAM}"
+            },
+            "spec": {
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${IMAGESTREAM}:latest"
+                    }
+                },
+                "resources": {},
+                "source": {
+                    "contextDir": "${CONTEXT_DIR}",
+                    "git": {
+                        "ref": "${GIT_REF}",
+                        "uri": "${GIT_URI}"
+                    },
+                    "type": "Git"
+                },
+                "strategy": {
+                    "dockerStrategy": {
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "${BASE_IMAGESTREAM}",
+                            "namespace": ""
+                        }
+                    },
+                    "type": "Docker"
+                },
+                "triggers": [
+                    {
+                        "github": {
+                            "secret": "${GITHUB_TRIGGER_SECRET}"
+                        },
+                        "type": "GitHub"
+                    },
+                    {
+                        "generic": {
+                            "secret": "${GENERIC_TRIGGER_SECRET}"
+                        },
+                        "type": "Generic"
+                    },
+                    {
+                        "imageChange": {},
+                        "type": "ImageChange"
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "ImageStream",
+            "metadata": {
+                "name": "${IMAGESTREAM}"
+            },
+            "spec": {
+                "dockerImageRepository": "",
+                "tags": [
+                    {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "${IMAGESTREAM}:latest"
+                        },
+                        "name": "latest"
+                    }
+                ]
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "description": "The name for the new imagestream.",
+            "displayName": "Imagestream Name",
+            "name": "IMAGESTREAM",
+            "reqired": true,
+            "value": ""
+        },
+        {
+            "description": "The name:tag of the existing, base imagestream upon which this new imagestream builds.",
+            "displayName": "Base Imagestream Name",
+            "name": "BASE_IMAGESTREAM",
+            "required": true,
+            "value": "centos:7"
+        },
+        {
+            "description": "Git source URI for application",
+            "name": "GIT_URI",
+            "value": "https://github.com/mchudgins/osev3-examples.git"
+        },
+        {
+            "description": "Git branch/tag reference",
+            "name": "GIT_REF",
+            "value": "master"
+        },
+        {
+            "description": "Git Directory",
+            "name": "CONTEXT_DIR",
+            "value": "spring-boot/springboot-sti"
+        },
+        {
+            "description": "Github trigger secret",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "name": "GITHUB_TRIGGER_SECRET"
+        },
+        {
+            "description": "Generic build trigger secret",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "name": "GENERIC_TRIGGER_SECRET"
+        }
+    ]
+}
