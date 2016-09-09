@@ -32,6 +32,10 @@ function goCompile {
 		fi
 		echo "Running make all"
 		make all
+		if [ $? != 0 ]; then
+	    echo "Error detected with 'make all'. Exiting."
+	    exit 1
+	  fi
 		return
 	fi
 
