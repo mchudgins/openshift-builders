@@ -54,6 +54,8 @@ RUN apt-get update -q \
 			go get -u github.com/jteeuwen/go-bindata/... \
 	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
 			go get -u github.com/elazarl/go-bindata-assetfs/... \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
+			go get -u github.com/mchudgins/gostatic/... \
 	&& rm -rf /tmp/* \
 	&& echo "The following go apps were installed into /golang/bin:" \
 	&& ls -l /golang/bin
