@@ -57,7 +57,7 @@ RUN apt-get update -q \
 	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
 			go get -u github.com/mchudgins/gostatic/... \
 	&& rm -rf /tmp/* \
-	&& echo "The following go apps were installed into /golang/bin:" \
+	&& echo "The following go apps are now installed into /golang/bin:" \
 	&& ls -l /golang/bin
 
 ENV GOPATH /golang
