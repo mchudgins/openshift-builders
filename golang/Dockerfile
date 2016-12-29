@@ -17,9 +17,9 @@ RUN apt-get update -q \
 		unzip \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
-	&& curl -sL https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz -o /tmp/go-1.7.tar.gz \
+	&& curl -sL https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz -o /tmp/go-1.7.tar.gz \
 	&& cd /usr/local && tar xfz /tmp/go-1.7.tar.gz && cd - \
-	&& curl -sL https://github.com/tools/godep/releases/download/v74/godep_linux_amd64 -o /usr/local/bin/godep \
+	&& curl -sL https://github.com/tools/godep/releases/download/v75/godep_linux_amd64 -o /usr/local/bin/godep \
 	&& chmod +x /usr/local/bin/godep \
 	&& echo 'downloading upx...' \
 	&& curl -sL http://upx.sourceforge.net/download/upx-3.91-amd64_linux.tar.bz2 -o /tmp/upx.tar.bz2 \
@@ -52,6 +52,8 @@ RUN apt-get update -q \
 			go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
 	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
 			go get -u github.com/jteeuwen/go-bindata/... \
+	&& PATH=${PATH}:/usr/local/go/bin GOPATH=/golang \
+			go get -u github.com/elazarl/go-bindata-assetfs/... \
 	&& rm -rf /tmp/* \
 	&& echo "The following go apps were installed into /golang/bin:" \
 	&& ls -l /golang/bin
