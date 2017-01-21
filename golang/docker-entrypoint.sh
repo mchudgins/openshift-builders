@@ -94,9 +94,12 @@ git config --global --add user.email golang-builder@dstresearch.com
 	    URL="https://${URL}"
 	  fi
 	  curl --head --silent --fail --location --max-time 16 $URL > /dev/null
-	  if [ $? != 0 ]; then
-	    echo "Could not access source url: ${SOURCE_REPOSITORY}"
-	    exit 1
+	  if [ $? != 0 ]; then # the Openshift gitserver only responds to /HEAD url
+            curl --head --silent --fail --location --max-time 16 $URL/HEAD > /dev/null
+	    if [ $? != 0 ]; then
+	      echo "Could not access source url: ${SOURCE_REPOSITORY}"
+	      exit 1
+	    fi
 	  fi
 	fi
 
