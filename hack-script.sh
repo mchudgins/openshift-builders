@@ -18,6 +18,11 @@ fi
 sudo docker tag debian:latest ${REGISTRY}:5000/mch/debian:latest
 sudo docker login -u mchudgins@dstsystems.com -e mchudgins@dstsystems.com -p `oc whoami -t` ${REGISTRY}:5000
 sudo docker push ${REGISTRY}:5000/mch/debian:latest
-oc new-app --file generic-template.json -p IMAGESTREAM=golang,CONTEXT_DIR=/golang,GIT_REF=master,GIT_URI=https://github.com/mchudgins/openshift-builders.git,BASE_IMAGESTREAM=debian:latest
+oc new-app --file generic-template.json \
+	-p IMAGESTREAM=golang \
+	-p CONTEXT_DIR=/golang \
+	-p GIT_REF=master \
+	-p GIT_URI=https://github.com/mchudgins/openshift-builders.git \
+	-p BASE_IMAGESTREAM=debian:latest
 oc start-build bc/golang
 oc logs --follow golang-1-build
