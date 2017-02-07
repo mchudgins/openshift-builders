@@ -4,7 +4,7 @@ if [[ -z $1 ]]; then
 else
 	HOST=$1
 fi
-                                                                                                                                                               │ld-strategy-custom mchudgins@dstsystems.com
+
 sudo docker pull debian:latest
 oc login --insecure-skip-tls-verify ${HOST}
 sudo /home/mchudgins/bin/oc --config /var/lib/origin/openshift.local.config/master/admin.kubeconfig adm policy \
