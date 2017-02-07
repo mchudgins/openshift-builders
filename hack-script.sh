@@ -8,7 +8,7 @@ fi
 sudo docker pull debian:latest
 oc login --insecure-skip-tls-verify ${HOST}
 sudo /home/mchudgins/bin/oc --config /var/lib/origin/openshift.local.config/master/admin.kubeconfig adm policy \
-	add-role-to-user system:build-strategy-custom mchudgins@dstsystems.com
+	add-cluster-role-to-user system:build-strategy-custom mchudgins@dstsystems.com
 oc new-project mch
 oc import-image debian --from debian --confirm
 oc get is
