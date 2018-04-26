@@ -27,7 +27,7 @@ Additionally, ensure that the ephemeral git service account is able to start bui
 
 7. Hack on the local Dockerfiles in your repo.  Commit changes as desired and push them to the ephemeral git server.
 
-8. When satisfied, `git co master` and then `git merge --squash test_branch`, followed by git commit -m "Awesome commit message".
+8. When satisfied, `git co master` and then `git merge --squash test_branch`, followed by `git commit -m "Awesome commit message"`.
 
 9. `git push origin master` and you are done.
 
