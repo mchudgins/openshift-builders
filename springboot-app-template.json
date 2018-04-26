@@ -8,7 +8,7 @@
     "metadata": {
         "annotations": {
             "description": "Packages a springboot jar using a git repository with a Dockerfile and an existing, base image stream", 
-            "iconClass": "icon-shadowman", 
+            "iconClass": "icon-spring", 
             "tags": "builder, springboot, java"
         }, 
         "name": "springboot-app"

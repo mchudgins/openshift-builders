@@ -8,7 +8,7 @@
     "metadata": {
         "annotations": {
             "description": "Builds a golang application from a git repository with a Dockerfile and an existing, base image stream",
-            "iconClass": "icon-golang",
+            "iconClass": "icon-go-gopher",
             "tags": "builder, golang"
         },
         "name": "golang-app-template"

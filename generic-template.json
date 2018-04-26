@@ -8,7 +8,7 @@
     "metadata": {
         "annotations": {
             "description": "Builds an image stream from a git repository with a Dockerfile and an existing, base image stream",
-            "iconClass": "",
+            "iconClass": "icon-openshift",
             "tags": "builder"
         },
         "name": "docker-imagestream-builder"
