@@ -9,7 +9,8 @@
         "annotations": {
             "description": "Packages a springboot jar using a git repository with a Dockerfile and an existing, base image stream", 
             "iconClass": "icon-spring", 
-            "tags": "builder, springboot, java"
+            "tags": "builder, springboot, java",
+            "openshift.io/display-name": "Springboot App"
         }, 
         "name": "springboot-app"
     }, 

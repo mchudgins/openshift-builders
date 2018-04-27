@@ -9,9 +9,10 @@
         "annotations": {
             "description": "Builds a golang application from a git repository with a Dockerfile and an existing, base image stream",
             "iconClass": "icon-go-gopher",
-            "tags": "builder, golang"
+            "tags": "builder, golang",
+            "openshift.io/display-name": "Golang App"
         },
-        "name": "golang-app-template"
+        "name": "golang-app"
     },
     "objects": [
         {
