@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cat <<EOF
+This is an S2I Go $GOLANG_VERSION base image.
+EOF
+

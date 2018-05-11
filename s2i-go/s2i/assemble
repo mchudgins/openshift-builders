@@ -1,0 +1,145 @@
+#! /usr/bin/env sh
+
+#set -e
+
+function compile {
+if [ -f VERSION.txt ]; then
+	VERSION=$(cat VERSION.txt)
+	CTIMEVAR="-X ${go_repo}/version.GITCOMMIT=${GITCOMMIT} -X ${go_repo}/version.VERSION=${VERSION}"
+else
+	CTIMEVAR="-X ${go_repo}/version.GITCOMMIT=${GITCOMMIT}"
+fi
+
+echo CGO_ENABLED=0 GOOS=linux go build -tags netgo -ldflags "-w ${CTIMEVAR}" -o ${GOPATH}/bin/$(basename $(pwd)) . "(`pwd`)"
+CGO_ENABLED=0 GOOS=linux go build -tags netgo -ldflags "-w ${CTIMEVAR} -extldflags \"-static\"" -o ${GOPATH}/bin/$(basename $(pwd)) .
+}
+
+echo
+echo "===> Build started at $(date)"
+echo
+export HOME=/go
+export CGO_ENABLED=0
+export GOOS=linux
+export GOARCH=amd64
+START=$SECONDS
+
+if [ -z "${BUILD_LOGLEVEL}" ]; then
+    BUILD_LOGLEVEL=0
+fi
+
+if [ ${BUILD_LOGLEVEL} -ge 1 ]; then
+	echo "ls -l /tmp"
+	ls -l /tmp
+	echo "ls -l /tmp/src"
+	ls -l /tmp/src
+
+    echo "printenv | sort"
+    printenv | sort
+fi
+
+source=${OPENSHIFT_BUILD_SOURCE}
+if [ -n "${SOURCE_REPO_ORIGIN}" ]; then
+	source=${SOURCE_REPO_ORIGIN}
+fi
+
+repo=$(echo "${source}" | sed -e 's^.*://^^')
+go_repo=$(dirname ${repo})/$(basename ${repo} .git)
+path=${GOPATH}/src/${go_repo}
+mkdir -p ${path}
+
+echo "cp -raf /tmp/src/* ${path}"
+cp -raf /tmp/src/* ${path}
+
+cd ${path}
+
+if [ ${BUILD_LOGLEVEL} -ge 1 ]; then
+    echo "Working Directory: " $(pwd)
+fi
+
+if [ ${BUILD_LOGLEVEL} -ge 2 ]; then
+    echo "ls -l"
+    echo "ls -l to /dev/stderr" >/dev/stderr
+    ls -l
+fi
+
+failed="no"
+
+# goimports
+echo "goimports -l ."
+result=$(for i in $(ls); do if [[ -d $i && "$i" != "vendor" ]]; then goimports -l ./$i; fi; done | grep -v vendor)
+if [ -n "${result}" ]; then
+	echo "'goimports' has not been run for the files ${result}."
+	echo "Run 'goimports' on these files BEFORE checking them into git." 
+	failed="yes"
+fi
+
+# go install all the things
+echo CGO_ENABLED=0 GOOS=linux go install -i -a -tags netgo ./...
+CGO_ENABLED=0 GOOS=linux go install -i -v -a -tags netgo all 2>&1 | grep -v /usr/local/go
+
+if [ -n "${OPENSHIFT_BUILD_COMMIT}" ]; then
+	GITCOMMIT=${OPENSHIFT_BUILD_COMMIT}
+else
+	GITCOMMIT="unknown"
+fi
+
+ignoreMake=yes
+if [ -e Makefile ] && [ -z "${ignoreMake}" ]; then
+    echo "make"
+    make
+else
+    subdir=`ls -d cmd/*`
+    if [ -n "${TARGET_PKG}" ] || [ -z "${subdir}" ]; then
+        if [ -n "${TARGET_PKG}" ]; then
+	        cd $( echo ${GOPATH}/src/${TARGET_PKG} | sed 's^//^/^g' )
+	    fi
+        compile
+    else
+        for cmd in ${subdir}; do
+            cd $cmd
+            compile
+            cd -
+        done
+    fi
+fi
+
+# run tests AFTER installing, 'cause the the libraries should have been built
+
+# go test
+echo "go test"
+cd ${path}
+CGO_ENABLED=0 GOOS=linux go test ./...
+
+# go vet
+echo "go vet ./..."
+result=$(CGO_ENABLED=0 GOOS=linux go vet $(go list ./... | grep -v vendor) | grep -v '.pb.go:' | tee /dev/stderr)
+if [[ -n "${result}" ]]; then
+	echo "'go vet' found issues which need to be corrected."
+	failed="yes"
+fi
+
+# go lint
+echo "golint ./..."
+result=$(CGO_ENABLED=0 GOOS=linux golint ./... | grep -v '.pb.go:' | grep -v vendor | tee /dev/stderr)
+if [ -n "${result}" ]; then
+	echo "'golint' found issues which need to be corrected."
+	failed="yes"
+fi
+
+# staticcheck
+echo "staticcheck"
+result=$(CGO_ENABLED=0 GOOS=linux staticcheck $(go list ./... | grep -v vendor) | grep -v '.pb.go:' | grep -v '/usr/local/go' | tee /dev/stderr)
+if [ -n "${result}" ]; then
+	echo "'staticcheck' found issues which need to be corrected."
+	failed="yes"
+fi
+
+echo
+ls -l ${GOPATH}/bin
+echo
+echo "===> Build completed at $(date)"
+
+if [ "${failed}" == "yes" ]; then
+#	exit 1
+	echo "You're in luck.  Something went wrong, but I'm not exiting with an error today."
+fi
