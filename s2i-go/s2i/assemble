@@ -134,6 +134,15 @@ if [ -n "${result}" ]; then
 	failed="yes"
 fi
 
+# build e2e test binaries
+for i in $(ls); do
+    if [[ -d $i && "$i" != "vendor" && "$i" != "cmd" ]]; then
+        cd $i
+        CGO_ENABLED=0 GOOS=linux go test -c -tags "netgo e2e" -o ${GOPATH}/bin/$i.test .
+        cd -
+    fi
+done
+
 echo
 ls -l ${GOPATH}/bin
 echo
